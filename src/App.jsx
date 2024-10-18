@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.jsx
+import { Route, Routes } from 'react-router-dom';
+import { Navbar } from "./components/NavBar";
+import { useState } from 'react';
+import { MailboxList } from './components/MailboxList';
+import { MailboxForm } from './components/MailboxForm';
+import { MailboxDetails } from './components/MailboxDetails';
 
-function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
 
-export default App
+const App = () => {
+  const [mailboxArray, setMailboxArray] = useState([{ boxHolder: "John Doe", size: "Small" }]);
+  const newMail = (e) => {
+    e.preventDefault();
+    setMailboxArray([...mailboxArray, { boxHolder: formData.name, size: formData.size }]);
+    navigate('/new-mailbox');
+  }
+  const [formData, setFormData] = useState({
+    name: '',
+    size: '',
+  });
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  return (<>
+    <Navbar></Navbar>
+    <Routes>
+      <Route path="/" element={<main><h1>Post Office</h1></main>} />
+      <Route path="/mailboxes" element={<MailboxList mailboxes={mailboxArray}></MailboxList>} />
+      <Route path="/new-mailbox" element={<MailboxForm newMail={newMail} formData={formData} handleChange={handleChange} />} />
+      <Route path="/mailboxes/:mailboxindex" element={<MailboxDetails mailboxes={mailboxArray}/>  }>   </Route>
+
+      <Route path="*" element={<h2> Not found</h2>} />
+    </Routes>
+  </>)
+};
+
+export default App;
